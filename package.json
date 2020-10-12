@@ -1,0 +1,19 @@
+{
+  "name": "proceeds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "fast-random": "^2.0.4",
+    "seed-random": "^2.2.0",
+    "seedrandom": "^3.0.5"
+  }
+}
