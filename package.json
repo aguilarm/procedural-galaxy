@@ -1,19 +1,19 @@
 {
-  "name": "proceeds",
+  "name": "procedural",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "@aguilarm",
   "devDependencies": {
     "typescript": "^4.0.3"
   },
   "dependencies": {
     "@types/seedrandom": "^2.4.28",
     "fast-random": "^2.0.4",
+    "parcel-bundler": "^1.12.4",
     "seed-random": "^2.2.0",
     "seedrandom": "^3.0.5"
   }
