@@ -1,5 +1,5 @@
 import { alea as Alea } from 'seedrandom';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 
 // get random number between a and b inclusive, ie (a <= x <= b)
 function __randomIntFromInterval(min, max, rand) {
@@ -8,82 +8,73 @@ function __randomIntFromInterval(min, max, rand) {
 
 type RandomGenerator = () => number;
 
-function drawStarField(canvas: HTMLCanvasElement, rand: RandomGenerator) {
-  const context2D = canvas.getContext('2d');
-  const start = Date.now();
-  for (let x = 0; x < canvas.width; x++) {
-    for (let y = 0; y < canvas.height; y++) {
-      const isStar = rand() < 0.005;
-      if (!isStar) continue;
-      const starGen = new Alea(x+y);
-      context2D.fillStyle = starGen() < 0.01 ? 'coral' : 'white';
-      context2D.fillRect(x, y, 1, 1);
-    }
-  }
-  console.log('took ', Date.now() - start, ' ms', canvas.width, canvas.height);
-}
-
-function drawCircularStarField(canvas: HTMLCanvasElement, rand: RandomGenerator) {
-  const context2D = canvas.getContext('2d');
-  const start = Date.now();
-  for (let x = 0; x < canvas.width; x++) {
-    for (let y = 0; y < canvas.height; y++) {
-      const isStar = rand() < 0.001;
-      if (!isStar) continue;
-      const starSeed = x + y + '';
-      const starRnd = new Alea(starSeed);
-      context2D.fillStyle = starRnd() < 0.1 ? 'coral' : 'blue';
-      const starSize = __randomIntFromInterval(1, 15, starRnd);
-      context2D.beginPath();
-      context2D.arc(x, y, starSize, 0, 2 * Math.PI);
-      context2D.fill();
-      context2D.closePath();
-    }
-  }
-  console.log('took ', Date.now() - start, ' ms', canvas.width, canvas.height);
-}
+const STAR_COLORS = [
+  '#FFFFFF',
+  '#FFFFFF',
+  '#FFFFFF',
+  '#FFFFFF',
+  '#FFFFFF',
+  '#FFAF65',
+  '#FFC189',
+  '#EA913F',
+  '#FFC565',
+  '#FFE3B4',
+  '#FF8C65',
+  '#FFC7B4',
+  '#FFA789',
+  '#EA6B3F',
+  '#C8471A',
+];
 
 class Star {
-  private _seed: string;
   private rand: RandomGenerator;
   private color: string;
   private radius: number;
-  private posX: number;
-  private posY: number;
-
-  get seed() {
-    return this._seed;
+  private pos: {
+    x: number,
+    y: number,
   }
 
-  set seed(newSeed) {
-    this.rand = new Alea(newSeed);
-    this._seed = newSeed;
-  }
-
-  constructor(posX, posY) {
-    this.seed = [posX,posY].join('');
+  constructor(posX, posY, starRandGenerator) {
+    this.rand = starRandGenerator;
     const initSeed = this.rand();
-    this.color = initSeed < 0.1 ? 'coral' : 'white';
+    this.color = STAR_COLORS[__randomIntFromInterval(0, STAR_COLORS.length-1, this.rand)];
     this.radius = __randomIntFromInterval(1, 8, this.rand);
-    this.posX = posX;
-    this.posY = posY;
+    this.pos = {
+      x: posX,
+      y: posY
+    }
   }
 
   public draw(context2D: CanvasRenderingContext2D) {
     context2D.fillStyle = this.color;
     context2D.beginPath();
-    context2D.arc(this.posX + 8, this.posY + 8, this.radius, 0, 2 * Math.PI);
+    context2D.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
     context2D.fill();
     context2D.closePath();
   }
 }
 
+const SECTOR_SIZE = 16;
+const MOVE_SPEED = 1;
+
+
+
 class Game {
   private _seed: string | number;
   private _canvas: HTMLCanvasElement;
   private context2D: CanvasRenderingContext2D;
-
   private rand: RandomGenerator;
+  private galaxyOffset = {
+    x: 0,
+    y: 0,
+  }
+  private activeInputs = {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+  }
 
   get seed() {
     return this._seed;
@@ -112,6 +103,7 @@ class Game {
   }
 
   private clearCanvas() {
+    this.context2D.clearRect(0,0,this.canvas.width,this.canvas.height);
     this.context2D.fillStyle = 'black';
     this.context2D.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
@@ -121,21 +113,26 @@ class Game {
     this.canvas.height = window.innerHeight;
   }
 
-  private redraw(newSeed?: number | string) {
+  private redraw() {
     this.clearCanvas();
     const currentSector = { x: 0, y: 0 };
-    this.seed = newSeed || this.seed;
     const {
       sectorsX,
       sectorsY,
-      rand,
-      context2D
+      context2D,
+      galaxyOffset
     } = this;
     for (currentSector.x = 0; currentSector.x < sectorsX; currentSector.x++) {
       for (currentSector.y = 0; currentSector.y < sectorsY; currentSector.y++) {
-        const isStar = rand() < 0.05;
+        const seedX = currentSector.x + galaxyOffset.x;
+        const seedY = currentSector.y + galaxyOffset.y;
+        const seed = (seedX & 0xFFFF) << 16 | (seedY & 0xFFFF);
+        const starRandGenerator = new Alea(seed.toString());
+        const isStar = starRandGenerator() < 0.05;
         if (!isStar) continue;
-        const star = new Star(currentSector.x * 16, currentSector.y * 16);
+        const starCenterX = (currentSector.x) * SECTOR_SIZE + SECTOR_SIZE/2;
+        const starCenterY = (currentSector.y) * SECTOR_SIZE + SECTOR_SIZE/2;
+        const star = new Star(starCenterX, starCenterY, starRandGenerator);
         star.draw(context2D);
       }
     }
@@ -143,7 +140,6 @@ class Game {
 
 
   private handleResize = () => {
-    console.log('handle resize');
     this.updateCanvasSize();
     this.clearCanvas();
     // Reset rand() to start of sequence
@@ -152,21 +148,38 @@ class Game {
   }
 
   private handleKeyDown = (event: KeyboardEvent) => {
-    const {
-      canvas,
-      rand
-    } = this;
     switch(event.code) {
-      case 'Digit1':
-        this.clearCanvas();
-        drawStarField(canvas, rand);
+      case 'KeyW':
+        this.activeInputs.up = true;
         break;
-      case 'Digit2':
-        this.clearCanvas();
-        drawCircularStarField(canvas, rand);
+      case 'KeyS':
+        this.activeInputs.down = true;
         break;
-      case 'KeyR':
-        this.redraw(Date.now());
+      case 'KeyA':
+        this.activeInputs.left = true;
+        break;
+      case 'KeyD':
+        this.activeInputs.right = true;
+        break;
+      default:
+        return;
+    }
+  }
+  
+  private handleKeyUp = (event: KeyboardEvent) => {
+    switch(event.code) {
+      case 'KeyW':
+        this.activeInputs.up = false;
+        break;
+      case 'KeyS':
+        this.activeInputs.down = false;
+        break;
+      case 'KeyA':
+        this.activeInputs.left = false;
+        break;
+      case 'KeyD':
+        this.activeInputs.right = false;
+        break;
       default:
         return;
     }
@@ -182,7 +195,29 @@ class Game {
     this.clearCanvas();
     window.addEventListener('resize', debounce(this.handleResize, 200));
     document.addEventListener('keydown', this.handleKeyDown);
+    document.addEventListener('keyup', this.handleKeyUp);
     this.redraw();
+    this.loop();
+  }
+
+  private loop = () => {
+    const startOffset = { ...this.galaxyOffset };
+    if (this.activeInputs.up) {
+      this.galaxyOffset.y = this.galaxyOffset.y - MOVE_SPEED;
+    }
+    if (this.activeInputs.down) {
+      this.galaxyOffset.y = this.galaxyOffset.y + MOVE_SPEED;
+    }
+    if (this.activeInputs.right) {
+      this.galaxyOffset.x = this.galaxyOffset.x + MOVE_SPEED;
+    }
+    if (this.activeInputs.left) {
+      this.galaxyOffset.x = this.galaxyOffset.x - MOVE_SPEED;
+    }
+    if (!isEqual(startOffset, this.galaxyOffset)) {
+      this.redraw();
+    }
+    requestAnimationFrame(this.loop);
   }
 
 }
