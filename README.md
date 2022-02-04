@@ -7,5 +7,4 @@ creates an elite-style galaxy map procedurally in C++.
 
 ## Running
 
-Run `npm install` to get your node modules, and then `npm start` to serve up a build of this at `localhost:1234`.
-I've used Parcel to compile the Typescript here with (as of writing) zero config. Pretty nice.
+This is running on `remix.run`, which is similar to NextJS. You can use `yarn dev`, `yarn start`, and a few other commands to get going. Check `package.json` for the available commands, and [the remix.run docs](https://remix.run) for loads more info.
