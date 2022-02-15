@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "lodash": "./lodash.js",
+    "seedrandom": "./seedrandom.js"
+  }
+}
