@@ -1,7 +1,10 @@
 node_modules
 .idea
+.parcel-cache
+.DS_Store
 /.cache
 /build
 /public/build
 .env
 *.log
+docs

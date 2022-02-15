@@ -1,6 +1,6 @@
 node_modules
 **/*.min.js
-build
+docs
 .cache
-remix.config.js
+.parcelrc
 .eslintrc.js

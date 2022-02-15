@@ -1,5 +1,5 @@
 import { proceduralRandomIntFromInterval } from '../utils';
-import { GRID_SIZE } from "~/engine/constants";
+import { GRID_SIZE } from '../constants';
 
 class Star {
   private COLORS = [

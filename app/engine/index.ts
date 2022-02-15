@@ -2,7 +2,7 @@ import { alea as prng } from 'seedrandom';
 import { debounce } from 'lodash';
 import { InputEngine } from './inputEngine';
 import Star from './entities/Star';
-import { GRID_SIZE, FPS, MOVE_SPEED } from "~/engine/constants";
+import { GRID_SIZE, FPS, MOVE_SPEED } from './constants';
 
 class Game {
   private _seed!: string;
@@ -47,7 +47,11 @@ class Game {
     return this.canvas.height / 16;
   }
 
-  constructor(canvas: HTMLCanvasElement, container: HTMLElement, seed?: string) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    container: HTMLElement,
+    seed?: string,
+  ) {
     this.canvas = canvas;
     this.containerElement = container;
     this.seed = seed || 'default';

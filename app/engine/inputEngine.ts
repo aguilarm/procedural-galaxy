@@ -58,11 +58,11 @@ export class InputEngine {
     this.mousePos.y = event.pageY;
   };
 
-  private handleMouseUp = (event: MouseEvent) => {
+  private handleMouseUp = () => {
     this.mouseDown = false;
   };
 
-  private handleMouseDown= (event: MouseEvent) => {
+  private handleMouseDown = () => {
     this.mouseDown = true;
   };
 
