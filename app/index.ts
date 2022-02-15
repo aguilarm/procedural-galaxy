@@ -1,5 +1,7 @@
 import Engine from './engine/index';
 
+console.log('Script registered, booting engine...');
+
 const canvasEl = document.getElementById('game') as HTMLCanvasElement | null;
 const containerEl = document.getElementById(
   'gameContainer',

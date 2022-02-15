@@ -52,6 +52,7 @@ class Game {
     container: HTMLElement,
     seed?: string,
   ) {
+    console.log('Constructing engine with seed: ' + seed + ' and this canvas and container: ', canvas, container)
     this.canvas = canvas;
     this.containerElement = container;
     this.seed = seed || 'default';
@@ -130,6 +131,7 @@ class Game {
   };
 
   public init() {
+    console.log('Initializing engine loop...');
     this.updateCanvasSize();
     this.clearCanvas();
     window.addEventListener('resize', debounce(this.handleResize, 500));
