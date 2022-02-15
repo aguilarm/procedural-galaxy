@@ -52,7 +52,13 @@ class Game {
     container: HTMLElement,
     seed?: string,
   ) {
-    console.log('Constructing engine with seed: ' + seed + ' and this canvas and container: ', canvas, container)
+    console.log(
+      'Constructing engine with seed: ' +
+        seed +
+        ' and this canvas and container: ',
+      canvas,
+      container,
+    );
     this.canvas = canvas;
     this.containerElement = container;
     this.seed = seed || 'default';

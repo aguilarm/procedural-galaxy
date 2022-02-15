@@ -11,7 +11,7 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn lint
-      - run: yarn build --public-url https://aguilarm.github.io/procedural-galaxy/
+      - run: yarn build
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
