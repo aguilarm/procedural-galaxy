@@ -1,9 +1,9 @@
 import {alea as prng} from "../_snowpack/pkg/seedrandom.js";
 import {debounce} from "../_snowpack/pkg/lodash.js";
-import {InputEngine} from "./inputEngine.js";
+import InputEngine from "./InputEngine.js";
 import Star from "./entities/Star.js";
 import {GRID_SIZE, FPS, MOVE_SPEED} from "./constants.js";
-class Game {
+class Engine {
   constructor(canvas, container, seed) {
     this.galaxyOffset = {
       x: 0,
@@ -107,4 +107,4 @@ class Game {
     this.loop(performance.now());
   }
 }
-export default Game;
+export default Engine;

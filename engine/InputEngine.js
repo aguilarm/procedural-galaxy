@@ -1,5 +1,5 @@
 import {debounce} from "../_snowpack/pkg/lodash.js";
-export class InputEngine {
+export default class InputEngine {
   constructor() {
     this.activeDirections = {
       up: false,
@@ -15,15 +15,19 @@ export class InputEngine {
     this.handleKeyDown = (event) => {
       switch (event.code) {
         case "KeyW":
+        case "ArrowUp":
           this.activeDirections.up = true;
           break;
         case "KeyS":
+        case "ArrowDown":
           this.activeDirections.down = true;
           break;
         case "KeyA":
+        case "ArrowLeft":
           this.activeDirections.left = true;
           break;
         case "KeyD":
+        case "ArrowRight":
           this.activeDirections.right = true;
           break;
         default:
@@ -33,15 +37,19 @@ export class InputEngine {
     this.handleKeyUp = (event) => {
       switch (event.code) {
         case "KeyW":
+        case "ArrowUp":
           this.activeDirections.up = false;
           break;
         case "KeyS":
+        case "ArrowDown":
           this.activeDirections.down = false;
           break;
         case "KeyA":
+        case "ArrowLeft":
           this.activeDirections.left = false;
           break;
         case "KeyD":
+        case "ArrowRight":
           this.activeDirections.right = false;
           break;
         default:
