@@ -1,30 +1,22 @@
-import InputEngine from "../../engine/InputEngine";
+import InputEngine from '../../app/engine/InputEngine';
 
-describe("Engine", () => {
+describe('Engine', () => {
   const inputEngine = new InputEngine();
   it('should initialize', () => {
     expect(inputEngine).toBeInstanceOf(InputEngine);
   });
   it('should detect directional keys', () => {
     const movementKeyGroups = [
-      [
-        'KeyW',
-        'KeyS',
-        'KeyA',
-        'KeyD',
-      ],
-      [
-        'ArrowUp',
-        'ArrowDown',
-        'ArrowLeft',
-        'ArrowRight',
-      ]
-    ]
-    movementKeyGroups.forEach(group => {
-      group.forEach(code => {
-        document.dispatchEvent(new KeyboardEvent('keydown', {
-          code
-        }));
+      ['KeyW', 'KeyS', 'KeyA', 'KeyD'],
+      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'],
+    ];
+    movementKeyGroups.forEach((group) => {
+      group.forEach((code) => {
+        document.dispatchEvent(
+          new KeyboardEvent('keydown', {
+            code,
+          }),
+        );
       });
       expect(inputEngine.activeDirections).toMatchObject({
         up: true,
@@ -32,11 +24,13 @@ describe("Engine", () => {
         right: true,
         left: true,
       });
-      group.forEach(code => {
-        document.dispatchEvent(new KeyboardEvent('keyup', {
-          code: code
-        }))
-      })
+      group.forEach((code) => {
+        document.dispatchEvent(
+          new KeyboardEvent('keyup', {
+            code: code,
+          }),
+        );
+      });
       expect(inputEngine.activeDirections).toMatchObject({
         up: false,
         down: false,
@@ -49,11 +43,13 @@ describe("Engine", () => {
   it('should detect mouse movement', async () => {
     // The mouse move handler is debounced, so we'll fake moving ahead.
     jest.useFakeTimers();
-    document.dispatchEvent(new MouseEvent('mousemove', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    }));
+    document.dispatchEvent(
+      new MouseEvent('mousemove', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
     jest.runAllTimers();
     // I could not, after a bit of research, find a way to simulate a mouse move
     //   Seems largely related to the fact that you can't actually move a mouse
@@ -61,7 +57,7 @@ describe("Engine", () => {
     expect(inputEngine.mousePos).toMatchObject({
       x: undefined,
       y: undefined,
-    })
+    });
     jest.useRealTimers();
   });
 
@@ -71,6 +67,4 @@ describe("Engine", () => {
     document.dispatchEvent(new MouseEvent('mouseup'));
     expect(inputEngine.mouseDown).toBe(false);
   });
-
-
-})
+});

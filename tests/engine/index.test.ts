@@ -1,7 +1,7 @@
-import Engine from '../../engine/index';
-import InputEngine from "../../engine/InputEngine";
+import Engine from '../../app/engine/index';
+import InputEngine from '../../app/engine/InputEngine';
 
-describe("Engine", () => {
+describe('Engine', () => {
   document.body.innerHTML = `
     <div id="gameContainer">
       <canvas id="game"></canvas>
@@ -20,6 +20,4 @@ describe("Engine", () => {
     expect(engine.seed).toEqual('test');
     expect(engine.inputEngine).toBeInstanceOf(InputEngine);
   });
-
-
-})
+});
