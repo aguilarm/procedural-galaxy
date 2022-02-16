@@ -1,10 +1,10 @@
 import { alea as prng } from 'seedrandom';
 import { debounce } from 'lodash';
-import { InputEngine } from './inputEngine';
+import InputEngine from './InputEngine';
 import Star from './entities/Star';
 import { GRID_SIZE, FPS, MOVE_SPEED } from './constants';
 
-class Game {
+class Engine {
   private _seed!: string;
   private _canvas!: HTMLCanvasElement;
   private context2D!: CanvasRenderingContext2D;
@@ -146,4 +146,4 @@ class Game {
   }
 }
 
-export default Game;
+export default Engine;

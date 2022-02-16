@@ -1,6 +1,6 @@
 import { debounce } from 'lodash';
 
-export class InputEngine {
+export default class InputEngine {
   public activeDirections = {
     up: false,
     down: false,
@@ -18,15 +18,19 @@ export class InputEngine {
   private handleKeyDown = (event: KeyboardEvent) => {
     switch (event.code) {
       case 'KeyW':
+      case 'ArrowUp':
         this.activeDirections.up = true;
         break;
       case 'KeyS':
+      case 'ArrowDown':
         this.activeDirections.down = true;
         break;
       case 'KeyA':
+      case 'ArrowLeft':
         this.activeDirections.left = true;
         break;
       case 'KeyD':
+      case 'ArrowRight':
         this.activeDirections.right = true;
         break;
       default:
@@ -37,15 +41,19 @@ export class InputEngine {
   private handleKeyUp = (event: KeyboardEvent) => {
     switch (event.code) {
       case 'KeyW':
+      case 'ArrowUp':
         this.activeDirections.up = false;
         break;
       case 'KeyS':
+      case 'ArrowDown':
         this.activeDirections.down = false;
         break;
       case 'KeyA':
+      case 'ArrowLeft':
         this.activeDirections.left = false;
         break;
       case 'KeyD':
+      case 'ArrowRight':
         this.activeDirections.right = false;
         break;
       default:
